@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Hide navbar when in fullscreen */
+:fullscreen .navbar {
+    display: none;
+}
+
+/* Vendor prefixes for better support */
+:-webkit-full-screen .navbar {
+    display: none;
+}
+:-moz-full-screen .navbar {
+    display: none;
+}
+:-ms-fullscreen .navbar {
+    display: none;
+}
+

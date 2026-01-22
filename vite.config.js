@@ -8,10 +8,16 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+
     server: {
+        host: '0.0.0.0',
+        port: 5173,
+        hmr: {
+            host: 'calendar.localhost' || 'workspace', // or your Docker service name if needed
+        },
         watch: {
             usePolling: true,
+            interval: 100,
         },
-        host: true,
-    }
+    },
 });
