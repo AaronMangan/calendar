@@ -89,6 +89,11 @@ new class extends Component
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </button>
+                        <button id="fullscreenBtn" class="w-full text-start">
+                            <x-dropdown-link>
+                                {{ __('Fullscreen') }}
+                            </x-dropdown-link>
+                        </button>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -141,6 +146,12 @@ new class extends Component
                 <button wire:click="logout" class="w-full text-start">
                     <x-responsive-nav-link>
                         {{ __('Log Out') }}
+                    </x-responsive-nav-link>
+                </button>
+                
+                <button id="fullscreenBtn" class="w-full text-start">
+                    <x-responsive-nav-link>
+                        {{ __('Fullscreen') }}
                     </x-responsive-nav-link>
                 </button>
             </div>
