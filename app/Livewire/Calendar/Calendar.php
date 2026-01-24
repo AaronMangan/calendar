@@ -63,6 +63,21 @@ class Calendar extends Component
         return collect($days);
     }
 
+    public function eventsForDay(Carbon $day)
+    {
+        // Placeholder for fetching events for the given day.
+        // In a real application, you would fetch this from the database.
+        if ($day->format('Y-m-d') == Carbon::now()->format('Y-m-d')) {
+            $events = [
+                (object)['id' => 1, 'date' => now(), 'title' => 'Team Standup', 'type' => 'deadline'],
+                (object)['id' => 2, 'date' => now(), 'title' => 'Lunch', 'type' => 'holiday'],
+            ];
+            return $events ?? [];
+        } else {
+            return [];
+        }
+    }
+
     /**
      * Runs when the component is rendered.
      *
@@ -71,5 +86,11 @@ class Calendar extends Component
     public function render()
     {
         return view('livewire.calendar.calendar')->layout('layouts.app');
+    }
+
+    public function examineDay($day)
+    {
+        $date = $this->currentMonth->copy()->day($day)->format('Y-m-d');
+        return redirect()->route('calendar.day', ['date' => $date]);
     }
 }
