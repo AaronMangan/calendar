@@ -4,6 +4,7 @@ namespace App\Livewire\Calendar;
 
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class Calendar extends Component
 {
@@ -85,7 +86,9 @@ class Calendar extends Component
      */
     public function render()
     {
-        return view('livewire.calendar.calendar')->layout('layouts.app');
+        return Auth::user()->can('view calendar')
+            ? view('livewire.calendar.calendar')->layout('layouts.app')
+            : redirect()->route('dashboard');
     }
 
     public function examineDay($day)

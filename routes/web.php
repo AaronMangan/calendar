@@ -16,8 +16,16 @@ Route::view('profile', 'profile')
 
 // Calendar Routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/calendar', Calendar::class)->name('calendar');
-    Route::get('/calendar/{date}', DayView::class)->name('calendar.date');
+    
+    // Calendar Main View Route
+    Route::get('/calendar', Calendar::class)
+        ->middleware('permission:view calendar|edit calendar')
+        ->name('calendar');
+    
+    // Day View Route
+    Route::get('/calendar/{date}', DayView::class)
+        ->middleware('permission:view calendar|edit calendar')
+        ->name('calendar.date');
 });
 
 require __DIR__.'/auth.php';

@@ -33,9 +33,11 @@ class DayView extends Component
      */
     public function render()
     {
-        return view('livewire.calendar.day-view', [
-            'date' => $this->date ?? 'Unknown',
-        ])->layout('layouts.app');
+        return Auth::user()->can('view calendar')
+            ? view('livewire.calendar.day-view', 
+                ['date' => $this->date ?? 'Unknown']
+                )->layout('layouts.app')
+            : redirect()->route('dashboard');
     }
 
     /**
