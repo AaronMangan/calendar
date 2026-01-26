@@ -17,6 +17,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->string('code', 25)->unique();
             $table->string('status')->default('active');
+            $table->string('timezone')->default('UTC');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

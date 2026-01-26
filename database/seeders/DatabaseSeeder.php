@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'active',
             'code' => Str::random(25),
             'created_by' => User::first()->id,
+            'timezone' => 'Australia/Brisbane',
         ]);
 
         // Assign the family to the user

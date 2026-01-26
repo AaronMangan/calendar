@@ -68,7 +68,7 @@ class Calendar extends Component
     {
         // Placeholder for fetching events for the given day.
         // In a real application, you would fetch this from the database.
-        if ($day->format('Y-m-d') == Carbon::now()->format('Y-m-d')) {
+        if ($day->format('Y-m-d') == Carbon::now()->setTimezone('Australia/Brisbane')->format('Y-m-d')) {
             $events = [
                 (object)['id' => 1, 'date' => now(), 'title' => 'Team Standup', 'type' => 'deadline'],
                 (object)['id' => 2, 'date' => now(), 'title' => 'Lunch', 'type' => 'holiday'],

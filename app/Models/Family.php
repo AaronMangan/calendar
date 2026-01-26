@@ -15,6 +15,10 @@ class Family extends Model
     protected $fillable = [
         'name',
         'description',
+        'code',
+        'status',
+        'timezone',
+        'created_by',
     ];
 
     /**
