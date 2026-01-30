@@ -28,4 +28,9 @@ class Family extends Model
     {
         return $this->hasMany(User::class) ?? null;
     }
+
+    public function eventTypes(): ?HasMany
+    {
+        return $this->hasMany(EventType::class) ?? null;
+    }
 }

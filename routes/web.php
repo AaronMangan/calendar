@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Calendar\Calendar;
 use App\Models\Event;
+use App\Models\EventType;
 use App\Livewire\Calendar\DayView;
 use App\Livewire\Calendar\CreateNewEvent;
 
