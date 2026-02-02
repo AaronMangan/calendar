@@ -1,0 +1,113 @@
+<?php
+
+use App\Models\User;
+use App\Models\Family;
+use Illuminate\Support\Str;
+use App\Models\CalendarEvent;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+    
+        $user = User::create([
+            'name' => 'Aaron Mangan',
+            'email' => 'azza.mangan@gmail.com',
+            'password' => bcrypt('azza.mangan@gmail.com'),
+        ]);
+        $randomCode = Str::random(25);
+        
+        while (Family::where('code', $randomCode)->exists()) {
+            $randomCode = Str::random(25);
+        }
+
+        $family = Family::create([
+            'name' => 'Jaspers House',
+            'description' => 'A House for Jaspers Family',
+            'status' => 'active',
+            'code' => Str::random(25),
+            'created_by' => User::first()->id,
+            'timezone' => 'Australia/Brisbane',
+        ]);
+
+        // Assign the family to the user
+        $user->family_id = $family->id;
+        $user->assignRole('superadmin');
+        $user->save();
+
+        $user_id = $user->id;
+        $family_id = $user->family->id;
+        $events = [
+            // [
+            //     'name' => '',
+            //     'description' => '',
+            //     'from' => '',
+            //     'to' => '',
+            //     'location' => '',
+            //     'all_day' => '',
+            //     'is_public' => '',
+            //     'status' => '',
+            //     'user_id' => '',
+            //     'family_id' => '',
+            // ],
+            [
+                'name' => 'Morning Meeting',
+                'description' => 'The morning catch up with the team',
+                'from' => now()->subHour(),
+                'to' => now(),
+                'location' => 'Meeting Room 1',
+                'all_day' => 0,
+                'is_public' => 0,
+                'status' => 'active',
+                'user_id' => $user_id,
+                'family_id' => $family_id,
+            ],
+            [
+                'name' => 'Jasper Vet Appointment',
+                'description' => 'An appointment at the vet for Jasper',
+                'from' => now()->addDay(),
+                'to' => now()->addDay()->addHour(),
+                'location' => 'The Vet',
+                'all_day' => 0,
+                'is_public' => 0,
+                'status' => 'active',
+                'user_id' => $user_id,
+                'family_id' => $family_id,
+            ],
+            [
+                'name' => 'Training',
+                'description' => 'Training for the thing',
+                'from' => now()->addDays(2)->startOfDay(),
+                'to' => now()->addDays(2)->endOfDay(),
+                'location' => 'Training Facility',
+                'all_day' => 1,
+                'is_public' => 0,
+                'status' => 'active',
+                'user_id' => $user_id,
+                'family_id' => $family_id,
+            ],
+        ];
+
+        Schema::table('calendar_events', function (Blueprint $table) use ($events) {
+            collect($events)->each(function ($event) {
+                CalendarEvent::create($event);
+            });
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('calendar_events', function (Blueprint $table) {
+            //
+        });
+    }
+};

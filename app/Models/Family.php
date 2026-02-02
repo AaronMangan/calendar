@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CalendarEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -27,6 +28,11 @@ class Family extends Model
     public function users(): ?HasMany
     {
         return $this->hasMany(User::class) ?? null;
+    }
+
+    public function events(): ?HasMany
+    {
+        return $this->hasMany(CalendarEvent::class) ?? null;
     }
 
     public function eventTypes(): ?HasMany

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Calendar\Calendar;
-use App\Models\Event;
+use App\Models\CalendarEvent;
 use App\Models\EventType;
 use App\Livewire\Calendar\DayView;
 use App\Livewire\Calendar\CreateNewEvent;
@@ -11,8 +11,9 @@ Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard', 
     [
-        'count' => Event::count() ?? 0
-    ])->middleware(['auth', 'verified'])
+        'count' => CalendarEvent::count() ?? 0
+    ]
+)->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::view('profile', 'profile')

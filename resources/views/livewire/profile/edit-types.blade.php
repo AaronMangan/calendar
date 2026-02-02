@@ -30,7 +30,7 @@
     </header>
     <div class="grid grid-cols-2 gap-4 mt-4">
         @foreach($types as $type)
-            <div class='p-1 md:p-2 bg-[{{ $type->color }}] text-white shadow sm:rounded-lg text-center flex flex-row mx-auto w-full justify-center items-center'>
+            <div class="p-1 md:p-2 bg-[{{ $type->color }}] text-white shadow sm:rounded-lg text-center flex flex-row mx-auto w-full justify-center items-center">
                 {{ $type->name }} | {{ $type->color }} | <span class="text-xs items-center px-1 md:px-2">{{ $type->description }}</span> | <x-icons.edit-icon class="justify-end items-center" /><span class="w-auto cursor-pointer" wire:click="deleteType({{ $type->id }})"><x-icons.trash-icon class="items-center" /></span>
             </div>
         @endforeach
