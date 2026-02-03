@@ -67,6 +67,7 @@ return new class extends Migration
                 'status' => 'active',
                 'user_id' => $user_id,
                 'family_id' => $family_id,
+                'event_type_id' => 1,
             ],
             [
                 'name' => 'Jasper Vet Appointment',
@@ -79,6 +80,7 @@ return new class extends Migration
                 'status' => 'active',
                 'user_id' => $user_id,
                 'family_id' => $family_id,
+                'event_type_id' => 6,
             ],
             [
                 'name' => 'Training',
@@ -91,6 +93,7 @@ return new class extends Migration
                 'status' => 'active',
                 'user_id' => $user_id,
                 'family_id' => $family_id,
+                'event_type_id' => 7,
             ],
         ];
 

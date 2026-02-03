@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('icon')->nullable();
             $table->foreignId('family_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('key', 200);
             $table->timestamps();
         });
     }

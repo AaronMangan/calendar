@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Calendar;
 
+use App\Models\CalendarEvent;
 use Carbon\Carbon;
 use App\Models\Event;
 use Livewire\Component;
@@ -70,8 +71,9 @@ class Calendar extends Component
         // Placeholder for fetching events for the given day.
         // In a real application, you would fetch this from the database.
         if ($day->format('Y-m-d') == Carbon::now()->setTimezone('Australia/Brisbane')->format('Y-m-d')) {
-            // $events = auth()->user()->family->events()->get();
-            $events = [];
+            // $events = auth()->user()->family->calendar_events()->get();
+            $events = CalendarEvent::with('event_type')->get();
+            // $events = [];
             return $events ?? [];
         } else {
             return [];
