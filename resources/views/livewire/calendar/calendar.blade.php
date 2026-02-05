@@ -26,7 +26,7 @@
         @foreach ($this->days as $day)
             <div class="h-32 border-r border-b p-2 
                 {{ $day->month !== $currentMonth->month ? 'bg-gray-300 hidden md:block text-gray-500' : '' }}
-                {{ $day->isToday() ? 'bg-blue-200 text-black' : '' }}
+                {{ $day->toLocal()->isToday() ? 'bg-blue-200 text-black' : '' }}
             ">
                 <div class="text-base font-thin" wire.click="examineDay({{ $day?->day }})">
                     {{ $day?->day }}

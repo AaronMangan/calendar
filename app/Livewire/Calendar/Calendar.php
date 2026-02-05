@@ -68,11 +68,8 @@ class Calendar extends Component
 
     public function eventsForDay(Carbon $day)
     {
-        // Placeholder for fetching events for the given day.
-        // In a real application, you would fetch this from the database.
-        if ($day->format('Y-m-d') == Carbon::now()->setTimezone('Australia/Brisbane')->format('Y-m-d')) {
-            // $events = auth()->user()->family->calendar_events()->get();
-            $events = CalendarEvent::with('event_type')->get();
+        if ($day->toLocal()->format('Y-m-d') == Carbon::now()->setTimezone('Australia/Brisbane')->format('Y-m-d')) {
+            $events = auth()->user()->family->calendar_events()->get();
             // $events = [];
             return $events ?? [];
         } else {

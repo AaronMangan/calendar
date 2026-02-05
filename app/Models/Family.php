@@ -30,7 +30,7 @@ class Family extends Model
         return $this->hasMany(User::class) ?? null;
     }
 
-    public function events(): ?HasMany
+    public function calendar_events(): ?HasMany
     {
         return $this->hasMany(CalendarEvent::class) ?? null;
     }
