@@ -33,7 +33,7 @@
                 </div>
                 <!-- Events placeholder -->
                 <div class="mt-1 text-sm">
-                    <div class="space-y-1">
+                    <div class="space-y-1 w-full">
                         @foreach($this->eventsForDay($day) as $event)
                             @if($event?->id)
                                 <livewire:calendar.event-chip :event="$event" :type="$event?->type" :key="$event?->id" />

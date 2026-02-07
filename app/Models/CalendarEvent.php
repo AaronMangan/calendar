@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -21,5 +23,14 @@ class CalendarEvent extends Model
     public function event_type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'event_type_id', 'id') ?? null;
+    }
+
+    public function scopeForMonth(Builder $query, int $year, int $month)
+    {
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
+        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth();
+
+        return $query->where('from', '<=', $endOfMonth)
+                    ->where('to', '>=', $startOfMonth);
     }
 }

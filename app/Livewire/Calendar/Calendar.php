@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
 
 class Calendar extends Component
 {
@@ -18,13 +19,19 @@ class Calendar extends Component
     public Carbon $currentMonth;
 
     /**
+     * The events for the month.
+     */
+    public ?Collection $events;
+
+    /**
      * Runs when the component is added to the DOM
      *
      * @return void
      */
     public function mount()
     {
-        $this->currentMonth = now()->startOfMonth();
+        $this->currentMonth = now()->setTimezone(auth()->user()?->family?->timezone)->startOfMonth();
+        $this->events = $this->getEventsForMonth(now()->format('Y'), now()->format('m'));
     }
 
     /**
@@ -68,13 +75,13 @@ class Calendar extends Component
 
     public function eventsForDay(Carbon $day)
     {
-        if ($day->toLocal()->format('Y-m-d') == Carbon::now()->setTimezone('Australia/Brisbane')->format('Y-m-d')) {
-            $events = auth()->user()->family->calendar_events()->get();
-            // $events = [];
-            return $events ?? [];
-        } else {
-            return [];
-        }
+        $startOfDay = $day->copy()->startOfDay();
+        $endOfDay   = $day->copy()->endOfDay();
+
+        return $this->events->filter(function ($event) use ($startOfDay, $endOfDay) {
+            return $event->from <= $endOfDay
+                && $event->to   >= $startOfDay;
+        });
     }
 
     /**
@@ -93,5 +100,10 @@ class Calendar extends Component
     {
         $date = $this->currentMonth->copy()->day($day)->format('Y-m-d');
         return redirect()->route('calendar.day', ['date' => $date]);
+    }
+
+    public function getEventsForMonth(string $year, string $month): ?Collection
+    {
+        return CalendarEvent::forMonth($year, $month)->get();
     }
 }

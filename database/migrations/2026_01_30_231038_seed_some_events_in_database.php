@@ -16,46 +16,37 @@ return new class extends Migration
     public function up(): void
     {
     
-        $user = User::create([
-            'name' => 'Aaron Mangan',
-            'email' => 'azza.mangan@gmail.com',
-            'password' => bcrypt('azza.mangan@gmail.com'),
-        ]);
-        $randomCode = Str::random(25);
-        
-        while (Family::where('code', $randomCode)->exists()) {
+        if (! User::where('email', 'azza.mangan@gmail.com')->exists()) {
+            $user = User::create([
+                'name' => 'Aaron Mangan',
+                'email' => 'azza.mangan@gmail.com',
+                'password' => bcrypt('azza.mangan@gmail.com'),
+            ]);
             $randomCode = Str::random(25);
+            
+            while (Family::where('code', $randomCode)->exists()) {
+                $randomCode = Str::random(25);
+            }
+
+            $family = Family::create([
+                'name' => 'Jaspers House',
+                'description' => 'A House for Jaspers Family',
+                'status' => 'active',
+                'code' => Str::random(25),
+                'created_by' => User::first()->id,
+                'timezone' => 'Australia/Brisbane',
+            ]);
+
+            // Assign the family to the user
+            $user->family_id = $family->id;
+            $user->assignRole('superadmin');
+            $user->save();
+
+            $user_id = $user->id;
+            $family_id = $user->family->id;
         }
 
-        $family = Family::create([
-            'name' => 'Jaspers House',
-            'description' => 'A House for Jaspers Family',
-            'status' => 'active',
-            'code' => Str::random(25),
-            'created_by' => User::first()->id,
-            'timezone' => 'Australia/Brisbane',
-        ]);
-
-        // Assign the family to the user
-        $user->family_id = $family->id;
-        $user->assignRole('superadmin');
-        $user->save();
-
-        $user_id = $user->id;
-        $family_id = $user->family->id;
         $events = [
-            // [
-            //     'name' => '',
-            //     'description' => '',
-            //     'from' => '',
-            //     'to' => '',
-            //     'location' => '',
-            //     'all_day' => '',
-            //     'is_public' => '',
-            //     'status' => '',
-            //     'user_id' => '',
-            //     'family_id' => '',
-            // ],
             [
                 'name' => 'Morning Meeting',
                 'description' => 'The morning catch up with the team',
@@ -95,6 +86,19 @@ return new class extends Migration
                 'family_id' => $family_id,
                 'event_type_id' => 7,
             ],
+            [
+                'name' => 'Multiple Day Event',
+                'description' => 'to see how multiple events are handled',
+                'from' => now()->startOfDay(),
+                'to' => now()->addDays(2)->endOfDay(),
+                'location' => 'Somewhere, in the galaxy',
+                'all_day' => 1,
+                'is_public' => 0,
+                'status' => 'active',
+                'user_id' => $user_id,
+                'family_id' => $family_id,
+                'event_type_id' => 4,
+            ],
         ];
 
         Schema::table('calendar_events', function (Blueprint $table) use ($events) {
@@ -109,8 +113,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('calendar_events', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('calendar_events');
     }
 };
