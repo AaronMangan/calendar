@@ -122,6 +122,11 @@ class CreateNewEvent extends Component
      */
     private function validationRules(): array
     {
+        // Setting up an array of values to check if frequency is a valid value.
+        $vals = collect(self::RECURRANCES)->map(function ($f) {
+            return $f['id'];
+        })->values()->join(',');
+
         return [
             'title' => [
                 'string', 'max:255', 'required'
