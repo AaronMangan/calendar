@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('all_day')->default(false);
             $table->boolean('is_public')->default(true);
             $table->string('status')->default('active');
+            $table->boolean('is_recurring')->default(false);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('family_id')->constrained('families')->onDelete('cascade');
             $table->timestamps();

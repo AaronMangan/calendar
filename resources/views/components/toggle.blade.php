@@ -3,14 +3,16 @@
         'model' => null,
         'enabled' => null,
         'label' => null,
+        'onchange' => null,
     ]
 )
+
 <label class="inline-flex items-center cursor-pointer">
     <input
         type="checkbox"
         wire:model.live="{{ $model }}"
         class="sr-only peer"
-        :checked="$model"
+        wire:change="{{ $onchange }}"
     >
 
     <div

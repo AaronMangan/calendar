@@ -3,6 +3,7 @@
 namespace App\Livewire\Calendar;
 
 use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\On; 
 use Livewire\Component;
 
 use function Livewire\Volt\updated;
@@ -16,35 +17,50 @@ class CreateNewEvent extends Component
     public ?string $end_time = null;
     public ?string $description = null;
     public ?string $type = null;
-    public ?string $frequency = null;
+    public ?int $frequency_id = null;
     public ?bool $all_day = false;
     public ?bool $is_public = false;
     public ?bool $recurring = false;
-    
+    public ?bool $showRecurring = false;
+
+    /**
+     * Sets the recurrances. I am thinking about moving these to some sort of enum?
+     */
     const RECURRANCES = [
         [
             'id' => 'daily',
             'name' => 'Every Day',
+            'default' => true,
+        ],
+        [
+            'id' => 'business_days',
+            'name' => 'Every Business Day',
+            'default' => false,
         ],
         [
             'id' => 'weekly',
             'name' => 'Every Week',
+            'default' => false,
         ],
         [
             'id' => 'fortnightly',
             'name' => 'Every Fortnight',
+            'default' => false,
         ],
         [
             'id' => 'monthly',
             'name' => 'Every Month',
+            'default' => false,
         ],
         [
             'id' => 'quarterly',
             'name' => 'Every Quarter',
+            'default' => false,
         ],
         [
             'id' => 'yearly',
             'name' => 'Every Year',
+            'default' => false,
         ],
     ];
     
@@ -57,6 +73,16 @@ class CreateNewEvent extends Component
     {
         return view('livewire.calendar.create-new-event')
             ->layout('layouts.app');
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function setRecurring()
+    {
+        $this->recurring = !$this->recurring;
     }
 
     /**
@@ -84,6 +110,8 @@ class CreateNewEvent extends Component
             'start_time' => $this->start_time ?? null,
             'end_date' => $this->end_date ?? null,
             'end_time' => $this->end_time ?? null,
+            'is_recurring' => $this->is_recurring ?? false,
+            'frequency_id' => $this->frequency_id ?? null,
         ]);
     }
 
@@ -114,6 +142,11 @@ class CreateNewEvent extends Component
      */
     private function validationRules(): array
     {
+        // Setting up an array of values to check if frequency is a valid value.
+        $vals = collect(self::RECURRANCES)->map(function ($f) {
+            return $f['id'];
+        })->values()->join(',');
+
         return [
             'title' => [
                 'string', 'max:255', 'required'
@@ -138,7 +171,13 @@ class CreateNewEvent extends Component
             ],
             'is_public' => [
                 'nullable', 'boolean'
-            ],           
+            ],
+            'recurring' => [
+                'nullable', 'boolean'
+            ],
+            'frequency_id' => [
+                'nullable', 'required_if:recurring,true', 'in:' . $vals
+            ],
         ];
     }
 }
