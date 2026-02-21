@@ -8,7 +8,7 @@
 ])
 <div class="{{ $parentClass }}">
     <label for="{{ $name }}">{{ $label ?? 'Select:' }}</label>
-    <select model="{{ $xModel }}" class="{{ $class }}" name="{{ $name }}" type="select">
+    <select wire:model="{{ $xModel }}" class="{{ $class }}" name="{{ $name }}" type="select">
         @if (is_array($options))
             @foreach ($options as $option)
                 <option id="{{ $option['id'] }}" name="{{ $option['id'] }}">{{ $option['name'] }}</option>    

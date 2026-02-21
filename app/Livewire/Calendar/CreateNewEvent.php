@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Calendar;
 
-use Illuminate\Database\Eloquent\Collection;
-use Livewire\Attributes\On; 
+use App\Enums\Frequencies;
+use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 
 use function Livewire\Volt\updated;
@@ -17,7 +17,7 @@ class CreateNewEvent extends Component
     public ?string $end_time = null;
     public ?string $description = null;
     public ?string $type = null;
-    public ?int $frequency_id = null;
+    public ?string $frequency_id = null;
     public ?bool $all_day = false;
     public ?bool $is_public = false;
     public ?bool $recurring = false;
@@ -28,37 +28,37 @@ class CreateNewEvent extends Component
      */
     const RECURRANCES = [
         [
-            'id' => 'daily',
+            'id' => Frequencies::DAILY,
             'name' => 'Every Day',
             'default' => true,
         ],
         [
-            'id' => 'business_days',
+            'id' => Frequencies::EVERY_BUSINESS_DAY,
             'name' => 'Every Business Day',
             'default' => false,
         ],
         [
-            'id' => 'weekly',
+            'id' => Frequencies::WEEKLY,
             'name' => 'Every Week',
             'default' => false,
         ],
         [
-            'id' => 'fortnightly',
+            'id' => Frequencies::FORTNIGHTLY,
             'name' => 'Every Fortnight',
             'default' => false,
         ],
         [
-            'id' => 'monthly',
+            'id' => Frequencies::MONTHLY,
             'name' => 'Every Month',
             'default' => false,
         ],
         [
-            'id' => 'quarterly',
+            'id' => Frequencies::QUARTERLY,
             'name' => 'Every Quarter',
             'default' => false,
         ],
         [
-            'id' => 'yearly',
+            'id' => Frequencies::YEARLY,
             'name' => 'Every Year',
             'default' => false,
         ],
@@ -176,7 +176,7 @@ class CreateNewEvent extends Component
                 'nullable', 'boolean'
             ],
             'frequency_id' => [
-                'nullable', 'required_if:recurring,true', 'in:' . $vals
+                'nullable', 'required_if:recurring,true', new Enum(Frequencies::class)
             ],
         ];
     }

@@ -1,7 +1,8 @@
 @props(
     [
+        'id' => null,
         'model' => null,
-        'enabled' => null,
+        'name' => null,
         'label' => null,
         'onchange' => null,
     ]
@@ -10,6 +11,7 @@
 <label class="inline-flex items-center cursor-pointer">
     <input
         type="checkbox"
+        name="{{ $name }}"
         wire:model.live="{{ $model }}"
         class="sr-only peer"
         wire:change="{{ $onchange }}"
