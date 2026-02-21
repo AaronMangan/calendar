@@ -11,7 +11,7 @@ Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard', 
     [
-        'count' => App\Models\CalendarEvent::all()->count(),
+        'count' => App\Models\CalendarEvent::count() ?? 0,
     ]
 )->middleware(['auth', 'verified'])
     ->name('dashboard');

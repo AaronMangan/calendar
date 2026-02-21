@@ -14,6 +14,6 @@
         default => 'px-1'
     }
 @endphp
-<div class="h-5 rounded-md {$isAllDay} text-[10px] truncate flex items-center justify-center {{ $colorClasses($event?->event_type?->key) }}">
-    <p>{{ $event?->name ?? 'N/A' }}</p>
+<div class="h-5 rounded-md {$isAllDay} text-[10px] truncate flex items-center justify-center {{ $colorClasses($event?->event_type?->key) }} hover:cursor-pointer" wire:click="viewDay({{ $event }})">
+    <p>{{ $event?->title ?? 'N/A' }}</p>
 </div>

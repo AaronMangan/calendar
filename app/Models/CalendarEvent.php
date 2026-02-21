@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class CalendarEvent extends Model
 {
     protected $fillable = [
-        'name', 'description', 'from', 'to', 'location', 'all_day', 'is_recurring',
+        'title', 'description', 'from', 'to', 'location', 'all_day', 'is_recurring',
         'is_public', 'status', 'user_id', 'family_id', 'key', 'event_type_id',
     ];
 

@@ -1,5 +1,7 @@
 @php
-    $options = self::RECURRANCES ?? [];
+    $options = collect(self::RECURRANCES)->map(function ($r) {
+        return $r;
+    })->values()->toArray() ?? [];
 @endphp
 <div class="max-w-4xl mt-2 md:mt-12 p-2 md:p-6 bg-white rounded-lg shadow-md mx-2 md:mx-auto">
     <!-- Header -->
@@ -85,7 +87,7 @@
         </div>
 
         {{-- Recurring Event --}}
-        @if($this->recurring)
+        @if($this->is_recurring)
             <div class="flex h-auto w-full flex-col md:flex-row justify-start md:items-center">
                 <div class="w-full md:w-1/2 pr-1 md:pr-4">
                     <x-select parentClass="w-full" id="frequency_id" xModel="frequency_id" name="frequency_id" class="w-full rounded-lg border-gray-300" :label="'Select Frequency'" :options="$options"></x-select>

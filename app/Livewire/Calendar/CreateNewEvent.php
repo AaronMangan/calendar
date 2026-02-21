@@ -5,6 +5,7 @@ namespace App\Livewire\Calendar;
 use App\Enums\Frequencies;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
+use App\Models\CalendarEvent;
 
 use function Livewire\Volt\updated;
 
@@ -20,7 +21,7 @@ class CreateNewEvent extends Component
     public ?string $frequency_id = null;
     public ?bool $all_day = false;
     public ?bool $is_public = false;
-    public ?bool $recurring = false;
+    public ?bool $is_recurring = false;
     public ?bool $showRecurring = false;
 
     /**
@@ -28,37 +29,37 @@ class CreateNewEvent extends Component
      */
     const RECURRANCES = [
         [
-            'id' => Frequencies::DAILY,
+            'id' => Frequencies::DAILY->value,
             'name' => 'Every Day',
             'default' => true,
         ],
         [
-            'id' => Frequencies::EVERY_BUSINESS_DAY,
+            'id' => Frequencies::EVERY_BUSINESS_DAY->value,
             'name' => 'Every Business Day',
             'default' => false,
         ],
         [
-            'id' => Frequencies::WEEKLY,
+            'id' => Frequencies::WEEKLY->value,
             'name' => 'Every Week',
             'default' => false,
         ],
         [
-            'id' => Frequencies::FORTNIGHTLY,
+            'id' => Frequencies::FORTNIGHTLY->value,
             'name' => 'Every Fortnight',
             'default' => false,
         ],
         [
-            'id' => Frequencies::MONTHLY,
+            'id' => Frequencies::MONTHLY->value,
             'name' => 'Every Month',
             'default' => false,
         ],
         [
-            'id' => Frequencies::QUARTERLY,
+            'id' => Frequencies::QUARTERLY->value,
             'name' => 'Every Quarter',
             'default' => false,
         ],
         [
-            'id' => Frequencies::YEARLY,
+            'id' => Frequencies::YEARLY->value,
             'name' => 'Every Year',
             'default' => false,
         ],
@@ -82,7 +83,7 @@ class CreateNewEvent extends Component
      */
     public function setRecurring()
     {
-        $this->recurring = !$this->recurring;
+        $this->is_recurring = !$this->is_recurring;
     }
 
     /**
@@ -103,16 +104,21 @@ class CreateNewEvent extends Component
     public function createEvent(): void
     {
         $data = $this->validate($this->validationRules());
-        dd($data);
-        $event = EventCalendar::create([
+        $event = CalendarEvent::create([
             'title' => $this->title ?? null,
-            'start_date' => $this->start_date ?? null,
-            'start_time' => $this->start_time ?? null,
-            'end_date' => $this->end_date ?? null,
-            'end_time' => $this->end_time ?? null,
+            'from' => $this->start_date . ' ' . $this->start_time ?? null,
+            'to' => $this->end_date . ' ' . $this->end_time ?? null,
             'is_recurring' => $this->is_recurring ?? false,
             'frequency_id' => $this->frequency_id ?? null,
+            'user_id' => auth()->user()->id ?? null,
+            'family_id' =>auth()->user()->family_id ?? null,
         ]);
+
+        $event->exists()
+            ? session()->flash('Event created successfully!')
+            : null;
+        
+        response()->redirect('/calendar');
     }
 
     /**
@@ -142,11 +148,6 @@ class CreateNewEvent extends Component
      */
     private function validationRules(): array
     {
-        // Setting up an array of values to check if frequency is a valid value.
-        $vals = collect(self::RECURRANCES)->map(function ($f) {
-            return $f['id'];
-        })->values()->join(',');
-
         return [
             'title' => [
                 'string', 'max:255', 'required'
@@ -172,11 +173,11 @@ class CreateNewEvent extends Component
             'is_public' => [
                 'nullable', 'boolean'
             ],
-            'recurring' => [
+            'is_recurring' => [
                 'nullable', 'boolean'
             ],
             'frequency_id' => [
-                'nullable', 'required_if:recurring,true', new Enum(Frequencies::class)
+                'nullable', 'required_if:is_recurring,true', new Enum(Frequencies::class)
             ],
         ];
     }

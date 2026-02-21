@@ -29,7 +29,7 @@ return new class extends Migration
             }
 
             $family = Family::create([
-                'name' => 'Jaspers House',
+                'name' =>'Jaspers House',
                 'description' => 'A House for Jaspers Family',
                 'status' => 'active',
                 'code' => Str::random(25),
@@ -48,7 +48,7 @@ return new class extends Migration
 
         $events = [
             [
-                'name' => 'Morning Meeting',
+                'title' =>'Morning Meeting',
                 'description' => 'The morning catch up with the team',
                 'from' => now()->subHour(),
                 'to' => now(),
@@ -61,7 +61,7 @@ return new class extends Migration
                 'event_type_id' => 1,
             ],
             [
-                'name' => 'Jasper Vet Appointment',
+                'title' =>'Jasper Vet Appointment',
                 'description' => 'An appointment at the vet for Jasper',
                 'from' => now()->addDay(),
                 'to' => now()->addDay()->addHour(),
@@ -74,7 +74,7 @@ return new class extends Migration
                 'event_type_id' => 6,
             ],
             [
-                'name' => 'Training',
+                'title' =>'Training',
                 'description' => 'Training for the thing',
                 'from' => now()->addDays(2)->startOfDay(),
                 'to' => now()->addDays(2)->endOfDay(),
@@ -87,7 +87,7 @@ return new class extends Migration
                 'event_type_id' => 7,
             ],
             [
-                'name' => 'Multiple Day Event',
+                'title' =>'Multiple Day Event',
                 'description' => 'to see how multiple events are handled',
                 'from' => now()->startOfDay(),
                 'to' => now()->addDays(2)->endOfDay(),

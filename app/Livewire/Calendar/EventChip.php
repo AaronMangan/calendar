@@ -3,6 +3,7 @@
 namespace App\Livewire\Calendar;
 
 use Livewire\Component;
+use App\Models\CalendarEvent;
 
 class EventChip extends Component
 {
@@ -46,7 +47,10 @@ class EventChip extends Component
         ]);
     }
 
-    /**
+    /**    public function viewDay(CalendarEvent $event)
+    {
+        dd($event);
+    }
      * Set classes per chip type. This defines the colour of the chip
      *
      * @param string|null $type
@@ -61,5 +65,13 @@ class EventChip extends Component
             'holiday'  => ' text-black bg-violet-500 ',
             default    => ' text-black bg-sky-500 ',
         };
+    }
+
+    /**
+     * Route the user to the day view for more details.
+     */
+    public function viewDay(CalendarEvent $event)
+    {
+        dd($event);
     }
 }
