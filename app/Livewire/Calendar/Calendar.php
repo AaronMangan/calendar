@@ -12,6 +12,13 @@ use Illuminate\Database\Eloquent\Collection;
 class Calendar extends Component
 {
     /**
+     * The current date the calendar is populating.
+     * 
+     * @var string
+     */
+    public ?string $incrementDate = null;
+    
+    /**
      * Current Month as a Carbon object.
      *
      * @var Carbon
@@ -77,7 +84,7 @@ class Calendar extends Component
     {
         $startOfDay = $day->copy()->startOfDay();
         $endOfDay   = $day->copy()->endOfDay();
-
+        $this->incrementDate = $day->format('Y-m-d');
         return $this->events->filter(function ($event) use ($startOfDay, $endOfDay) {
             return $event->from <= $endOfDay
                 && $event->to   >= $startOfDay;

@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Calendar;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\CalendarEvent;
+use Illuminate\Http\Redirect;
 
 class EventChip extends Component
 {
@@ -47,10 +49,7 @@ class EventChip extends Component
         ]);
     }
 
-    /**    public function viewDay(CalendarEvent $event)
-    {
-        dd($event);
-    }
+    /**
      * Set classes per chip type. This defines the colour of the chip
      *
      * @param string|null $type
@@ -72,6 +71,6 @@ class EventChip extends Component
      */
     public function viewDay(CalendarEvent $event)
     {
-        dd($event);
+        return redirect()->route('calendar.date', ['date' => Carbon::parse($event?->from)->format('Y-m-d') ?? now()]);
     }
 }
