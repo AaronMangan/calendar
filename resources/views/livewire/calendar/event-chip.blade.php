@@ -1,4 +1,5 @@
 @php
+    $event = $event->load('event_type');
     $colorClasses = function ($eventType) {
         return match ($eventType) {
             'meeting' => 'bg-green-500 text-white',
@@ -14,6 +15,7 @@
         default => 'px-1'
     }
 @endphp
-<div class="h-5 rounded-md {$isAllDay} text-[10px] truncate flex items-center justify-center {{ $colorClasses($event?->event_type?->key) }} hover:cursor-pointer" wire:click="viewDay({{ $event }})">
+
+<div title="{{ $event?->event_type?->name }}: {{ $event?->title }}" class="h-4 rounded-md {$isAllDay} text-[10px] truncate flex items-center justify-center {{ $colorClasses($event?->event_type?->key) }} hover:cursor-pointer" wire:click="viewDay({{ $event }})">
     <p>{{ $event?->title ?? 'N/A' }}</p>
 </div>

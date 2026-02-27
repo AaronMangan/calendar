@@ -6,6 +6,7 @@ use App\Enums\Frequencies;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 use App\Models\CalendarEvent;
+use App\Models\EventType;
 
 use function Livewire\Volt\updated;
 
@@ -19,6 +20,7 @@ class CreateNewEvent extends Component
     public ?string $description = null;
     public ?string $type = null;
     public ?string $frequency_id = null;
+    public ?string $event_type_id = null;
     public ?bool $all_day = false;
     public ?bool $is_public = false;
     public ?bool $is_recurring = false;
@@ -29,37 +31,37 @@ class CreateNewEvent extends Component
      */
     const RECURRANCES = [
         [
-            'id' => Frequencies::DAILY->value,
+            'id' => Frequencies::DAILY,
             'name' => 'Every Day',
             'default' => true,
         ],
         [
-            'id' => Frequencies::EVERY_BUSINESS_DAY->value,
+            'id' => Frequencies::EVERY_BUSINESS_DAY,
             'name' => 'Every Business Day',
             'default' => false,
         ],
         [
-            'id' => Frequencies::WEEKLY->value,
+            'id' => Frequencies::WEEKLY,
             'name' => 'Every Week',
             'default' => false,
         ],
         [
-            'id' => Frequencies::FORTNIGHTLY->value,
+            'id' => Frequencies::FORTNIGHTLY,
             'name' => 'Every Fortnight',
             'default' => false,
         ],
         [
-            'id' => Frequencies::MONTHLY->value,
+            'id' => Frequencies::MONTHLY,
             'name' => 'Every Month',
             'default' => false,
         ],
         [
-            'id' => Frequencies::QUARTERLY->value,
+            'id' => Frequencies::QUARTERLY,
             'name' => 'Every Quarter',
             'default' => false,
         ],
         [
-            'id' => Frequencies::YEARLY->value,
+            'id' => Frequencies::YEARLY,
             'name' => 'Every Year',
             'default' => false,
         ],
@@ -103,7 +105,8 @@ class CreateNewEvent extends Component
      */
     public function createEvent(): void
     {
-        $data = $this->validate($this->validationRules());
+        $this->validate($this->validationRules());
+
         $event = CalendarEvent::create([
             'title' => $this->title ?? null,
             'from' => $this->start_date . ' ' . $this->start_time ?? null,
@@ -112,13 +115,17 @@ class CreateNewEvent extends Component
             'frequency_id' => $this->frequency_id ?? null,
             'user_id' => auth()->user()->id ?? null,
             'family_id' =>auth()->user()->family_id ?? null,
+            'event_type_id' => EventType::where([
+                ['name', '=', $this->event_type_id],
+                ['family_id', '=', auth()->user()->family_id],
+            ])->orWhere([['name', '=', $this->event_type_id], ['family_id', '=', null]])->first()?->id ?? null,
         ]);
 
         $event->exists()
-            ? session()->flash('Event created successfully!')
-            : null;
+            ? session()->flash('success', 'Event created successfully!')
+            : session()->flash('error', 'There was an error creating the event. Please try again.');
         
-        response()->redirect('/calendar');
+        response()->redirectTo('/calendar');
     }
 
     /**
@@ -178,6 +185,9 @@ class CreateNewEvent extends Component
             ],
             'frequency_id' => [
                 'nullable', 'required_if:is_recurring,true', new Enum(Frequencies::class)
+            ],
+            'event_type_id' => [
+                'required', 'exists:event_types,name'
             ],
         ];
     }

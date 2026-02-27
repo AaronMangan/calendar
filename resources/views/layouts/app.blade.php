@@ -19,6 +19,23 @@
             <div class="navbar">
                 <livewire:layout.navigation />
             </div>
+            @if (session()->has('success'))
+                <div class="bg-green-500 text-white p-2 rounded">
+                    {{ session('success') }}
+                </div>
+            @elseif (session()->has('error'))
+                <div class="bg-red-500 text-white p-2 rounded">
+                    {{ session('error') }}
+                </div>
+            @elseif (session()->has('warning'))
+                <div class="bg-yellow-500 text-white p-2 rounded">
+                    {{ session('warning') }}
+                </div>
+            @elseif (session()->has('info'))
+                <div class="bg-blue-500 text-white p-2 rounded">
+                    {{ session('info') }}
+                </div> 
+            @endif
 
             <!-- Page Heading -->
             @if (isset($header))

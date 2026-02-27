@@ -22,7 +22,7 @@
     </div>
 
     <!-- Calendar grid -->
-    <div class="grid grid-cols-1 md:grid-cols-7 grid-rows-5 border-l border-t">
+    <div title="{{ $this->currentMonth->format('F Y') }}" class="grid grid-cols-1 md:grid-cols-7 grid-rows-5 border-l border-t">
         @foreach ($this->days as $day)
             <div class="h-32 border-r border-b p-2 
                 {{ $day->month !== $currentMonth->month ? 'bg-gray-300 hidden md:block text-gray-500' : '' }}
@@ -32,14 +32,28 @@
                     {{ $day?->day }}
                 </div>
                 <!-- Events placeholder -->
-                <div class="mt-1 text-sm">
-                    <div class="space-y-1 w-full">
-                        @foreach($this->eventsForDay($day) as $event)
-                            @if($event?->id)
-                                <livewire:calendar.event-chip :event="$event" :type="$event?->type" :key="$event?->id" />
-                            @endif
-                        @endforeach
-                    </div>
+                <div class="mt-1 text-sm space-y-1">
+                    @php
+                        $events = collect($this->eventsForDay($day));
+                        $visibleEvents = $events->take(3);
+                        $remainingCount = $events->count() - 3;
+                    @endphp
+
+                    @foreach ($visibleEvents as $event)
+                        @if($event?->id)
+                            <livewire:calendar.event-chip 
+                                :event="$event" 
+                                :type="$event?->type" 
+                                :key="$event?->id" 
+                            />
+                        @endif
+                    @endforeach
+
+                    @if ($remainingCount > 0)
+                        <div class="text-xs text-gray-500">
+                            +{{ $remainingCount }} more
+                        </div>
+                    @endif
                 </div>
             </div>
         @endforeach

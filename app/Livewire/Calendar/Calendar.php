@@ -8,6 +8,7 @@ use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Calendar extends Component
 {
@@ -38,7 +39,7 @@ class Calendar extends Component
     public function mount()
     {
         $this->currentMonth = now()->setTimezone(auth()->user()?->family?->timezone)->startOfMonth();
-        $this->events = $this->getEventsForMonth(now()->format('Y'), now()->format('m'));
+        $this->events = $this->getEventsForMonth(now()->toLocal()->format('Y'), now()->format('m'));
     }
 
     /**
@@ -68,8 +69,12 @@ class Calendar extends Component
      */
     public function getDaysProperty()
     {
-        $start = $this->currentMonth->copy()->startOfMonth()->startOfWeek();
-        $end   = $this->currentMonth->copy()->endOfMonth()->endOfWeek();
+        /**
+         | Important: This method calculates the days to be displayed in the calendar view. 
+         | It starts from the first day of the current month. Carbon::SUNDAY is used to ensure the calendar starts on Sunday.
+         */
+        $start = $this->currentMonth->copy()->startOfMonth()->toLocal()->startOfWeek(Carbon::SUNDAY);
+        $end   = $this->currentMonth->copy()->toLocal()->endOfMonth()->endOfWeek();
 
         $days = [];
         while ($start <= $end) {
@@ -80,11 +85,19 @@ class Calendar extends Component
         return collect($days);
     }
 
+    /**
+     * Get the events for each day in a month. This is called when the month is changed.
+     *
+     * @param Carbon $day
+     * @return void
+     */
     public function eventsForDay(Carbon $day)
     {
         $startOfDay = $day->copy()->startOfDay();
         $endOfDay   = $day->copy()->endOfDay();
         $this->incrementDate = $day->format('Y-m-d');
+        
+        /* Return the events. */
         return $this->events->filter(function ($event) use ($startOfDay, $endOfDay) {
             return $event->from <= $endOfDay
                 && $event->to   >= $startOfDay;
@@ -103,12 +116,25 @@ class Calendar extends Component
             : redirect()->route('dashboard');
     }
 
-    public function examineDay($day)
+    /**
+     * Gets the details for the specific day.
+     *
+     * @param Carbon $day
+     * @return RedirectResponse
+     */
+    public function examineDay($day): RedirectResponse
     {
-        $date = $this->currentMonth->copy()->day($day)->format('Y-m-d');
+        $date = $this->currentMonth->copy()->toLocal()->day($day)->format('Y-m-d');
         return redirect()->route('calendar.day', ['date' => $date]);
     }
 
+    /**
+     * Returns all the events for the current month, as a collection.
+     *
+     * @param string $year
+     * @param string $month
+     * @return Collection|null
+     */
     public function getEventsForMonth(string $year, string $month): ?Collection
     {
         return CalendarEvent::forMonth($year, $month)->get();
