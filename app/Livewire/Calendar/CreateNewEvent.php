@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 use App\Models\CalendarEvent;
 use App\Models\EventType;
+use Illuminate\Http\Request;
 
 use function Livewire\Volt\updated;
 
@@ -103,10 +104,12 @@ class CreateNewEvent extends Component
      *
      * @return void
      */
-    public function createEvent(): void
+    public function createEvent(Request $request): void
     {
-        $this->validate($this->validationRules());
 
+        
+        $data = $this->validate($this->validationRules());
+        
         $event = CalendarEvent::create([
             'title' => $this->title ?? null,
             'from' => $this->start_date . ' ' . $this->start_time ?? null,
@@ -184,7 +187,7 @@ class CreateNewEvent extends Component
                 'nullable', 'boolean'
             ],
             'frequency_id' => [
-                'nullable', 'required_if:is_recurring,true', new Enum(Frequencies::class)
+                'nullable', /*'required_if:is_recurring,true', new Enum(Frequencies::class)*/
             ],
             'event_type_id' => [
                 'required', 'exists:event_types,name'
