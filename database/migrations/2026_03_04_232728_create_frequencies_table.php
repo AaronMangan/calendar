@@ -37,6 +37,13 @@ return new class extends Migration
                 Frequency::create($freq);
             });
         });
+
+        /**
+         *  Update the calendar event table to add a foreign key .
+         */
+        Schema::table('calendar_events', function (Blueprint $table) {
+            $table->foreignId('frequency_id')->nullable()->constrained('frequencies')->onDelete('set null');
+        });
     }
 
     /**
