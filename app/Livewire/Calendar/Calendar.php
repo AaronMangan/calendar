@@ -74,7 +74,7 @@ class Calendar extends Component
          | It starts from the first day of the current month. Carbon::SUNDAY is used to ensure the calendar starts on Sunday.
          */
         $start = $this->currentMonth->copy()->startOfMonth()->toLocal()->startOfWeek(Carbon::SUNDAY);
-        $end   = $this->currentMonth->copy()->toLocal()->endOfMonth()->endOfWeek();
+        $end   = $this->currentMonth->copy()->toLocal()->endOfMonth();
 
         $days = [];
         while ($start <= $end) {
@@ -82,7 +82,10 @@ class Calendar extends Component
             $start->addDay();
         }
 
-        return collect($days);
+        $collected = collect($days);
+        // $lastDay = $collected->pop();
+
+        return $collected;
     }
 
     /**

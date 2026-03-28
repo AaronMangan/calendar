@@ -42,7 +42,7 @@
                     @foreach ($visibleEvents as $event)
                         @if($event?->id)
                             <livewire:calendar.event-chip 
-                                :event="$event" 
+                                :event="$event"
                                 :type="$event?->type" 
                                 :key="$event?->id" 
                             />
