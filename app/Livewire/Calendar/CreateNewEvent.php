@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Calendar;
 
-use App\Enums\Frequencies;
 use Illuminate\Validation\Rules\Enum;
 use Livewire\Component;
 use App\Models\CalendarEvent;
+use App\Models\Frequency;
 use App\Models\EventType;
 use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\Collection;
 use function Livewire\Volt\updated;
 
 class CreateNewEvent extends Component
@@ -26,47 +26,7 @@ class CreateNewEvent extends Component
     public ?bool $is_public = false;
     public ?bool $is_recurring = false;
     public ?bool $showRecurring = false;
-
-    /**
-     * Sets the recurrances. I am thinking about moving these to some sort of enum?
-     */
-    const RECURRANCES = [
-        [
-            'id' => Frequencies::DAILY,
-            'name' => 'Every Day',
-            'default' => true,
-        ],
-        [
-            'id' => Frequencies::EVERY_BUSINESS_DAY,
-            'name' => 'Every Business Day',
-            'default' => false,
-        ],
-        [
-            'id' => Frequencies::WEEKLY,
-            'name' => 'Every Week',
-            'default' => false,
-        ],
-        [
-            'id' => Frequencies::FORTNIGHTLY,
-            'name' => 'Every Fortnight',
-            'default' => false,
-        ],
-        [
-            'id' => Frequencies::MONTHLY,
-            'name' => 'Every Month',
-            'default' => false,
-        ],
-        [
-            'id' => Frequencies::QUARTERLY,
-            'name' => 'Every Quarter',
-            'default' => false,
-        ],
-        [
-            'id' => Frequencies::YEARLY,
-            'name' => 'Every Year',
-            'default' => false,
-        ],
-    ];
+    public ?Collection $recurrances;
     
     /**
      * Render the form.
@@ -75,6 +35,12 @@ class CreateNewEvent extends Component
      */
     public function render()
     {
+        $this->recurrances = Frequency::where(function ($sub) {
+            return $sub->whereNull('family_id')
+                ->orWhere('family_id', auth()
+                ->user()
+                ->family_id);
+        })->get();
         return view('livewire.calendar.create-new-event')
             ->layout('layouts.app');
     }
@@ -106,8 +72,6 @@ class CreateNewEvent extends Component
      */
     public function createEvent(Request $request): void
     {
-
-        
         $data = $this->validate($this->validationRules());
         
         $event = CalendarEvent::create([

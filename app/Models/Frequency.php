@@ -12,6 +12,6 @@ class Frequency extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'description', 'is_active', 'is_default'
+        'name', 'description', 'is_active', 'is_default', 'family_id'
     ];
 }

@@ -1,5 +1,5 @@
 @php
-    $options = collect(self::RECURRANCES)->map(function ($r) {
+    $options = collect($this->recurrances)->map(function ($r) {
         return $r;
     })->values()->toArray() ?? [];
     $types = collect(App\Models\EventType::where('family_id', '=', null)->orWhere('family_id', '=', auth()->user()->family_id)->get())->map(function ($t) {

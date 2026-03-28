@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     const FREQUENCIES = [
-        ['name' => 'Daily', 'description' => 'Occurs every day', 'is_active' => true, 'is_default' => false],
-        ['name' => 'Weekly', 'description' => 'Occurs every week', 'is_active' => true, 'is_default' => true],
-        ['name' => 'Fortnightly', 'description' => 'Occurs every two weeks', 'is_active' => true, 'is_default' => false],
-        ['name' => 'Tri-weekly', 'description' => 'Occurs every three weeks', 'is_active' => true, 'is_default' => false],
-        ['name' => 'Monthly', 'description' => 'Occurs every month', 'is_active' => true, 'is_default' => false],
-        ['name' => 'Bi-monthly', 'description' => 'Occurs every two months', 'is_active' => true, 'is_default' => false],
-        ['name' => 'Quarterly', 'description' => 'Occurs every quarter', 'is_active' => true, 'is_default' => false],
-        ['name' => 'Yearly', 'description' => 'Occurs every year', 'is_active' => true, 'is_default' => false],
+        ['name' => 'Daily', 'description' => 'Occurs every day', 'is_active' => true, 'family_id' => null, 'is_default' => false],
+        ['name' => 'Weekly', 'description' => 'Occurs every week', 'is_active' => true, 'family_id' => null, 'is_default' => true],
+        ['name' => 'Fortnightly', 'description' => 'Occurs every two weeks', 'is_active' => true, 'family_id' => null, 'is_default' => false],
+        ['name' => 'Tri-weekly', 'description' => 'Occurs every three weeks', 'is_active' => true, 'family_id' => null, 'is_default' => false],
+        ['name' => 'Monthly', 'description' => 'Occurs every month', 'is_active' => true, 'family_id' => null, 'is_default' => false],
+        ['name' => 'Bi-monthly', 'description' => 'Occurs every two months', 'is_active' => true, 'family_id' => null, 'is_default' => false],
+        ['name' => 'Quarterly', 'description' => 'Occurs every quarter', 'is_active' => true, 'family_id' => null, 'is_default' => false],
+        ['name' => 'Yearly', 'description' => 'Occurs every year', 'is_active' => true, 'family_id' => null, 'is_default' => false],
     ];
 
     /**
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_default')->default(false);
+            $table->foreignId('family_id')->nullable()->constrained('families')->onDelete('cascade');
             $table->timestamps();
         });
 
