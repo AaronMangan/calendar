@@ -76,6 +76,7 @@ class CreateNewEvent extends Component
         
         $event = CalendarEvent::create([
             'title' => $this->title ?? null,
+            'description' => $this?->description ?? null,
             'from' => $this->start_date . ' ' . $this->start_time ?? null,
             'to' => $this->end_date . ' ' . $this->end_time ?? null,
             'is_recurring' => $this->is_recurring ?? false,
@@ -151,10 +152,10 @@ class CreateNewEvent extends Component
                 'nullable', 'boolean'
             ],
             'frequency_id' => [
-                'nullable', /*'required_if:is_recurring,true', new Enum(Frequencies::class)*/
+                'nullable',
             ],
             'event_type_id' => [
-                'required', 'exists:event_types,name'
+                'required', 'exists:event_types,id'
             ],
         ];
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventType extends Model
 {
-    protected $fillable = ['name', 'color', 'description', 'icon', 'family_id', 'key'];
+    protected $fillable = ['name', 'color', 'description', 'icon', 'family_id', 'key', 'text_color'];
 
     /**
      * Return the family that owns this status.

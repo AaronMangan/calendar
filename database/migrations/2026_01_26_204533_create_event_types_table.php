@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->foreignId('family_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('key', 200);
+            $table->string('text_color', 100)->default('black');
             $table->timestamps();
         });
     }

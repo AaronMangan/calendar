@@ -25,7 +25,10 @@
     <div class="mt-4">
         <h3 class="text-xl font-semibold mb-2">Events for {{ $date }}</h3>
         @foreach($this->eventsForDay() as $dayEvent)
-            <div class="group relative flex items-start gap-6 p-6 transition-all duration-300 ease-in-out hover:bg-white/50 rounded-3xl border border-transparent hover:border-gray-100 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            @php
+                $bgColor = "bg-". $dayEvent?->event_type?->key;
+            @endphp
+            <div class="group relative flex items-start gap-6 p-6 transition-all duration-300 ease-in-out hover:border-gray-100 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div class="flex flex-col items-center">
                     <span class="text-xs font-bold uppercase tracking-widest text-blue-600/80">
                         {{ \Carbon\Carbon::parse($dayEvent->from)->format('H:i') }}
@@ -41,11 +44,12 @@
                             </h4>
                             
                             <div class="mt-2 flex gap-2">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[{{ $dayEvent?->event_type?->color ?? 'gray-900' }}] text-white">
-                                    {{ $dayEvent->event_type->key ?? 'N/A   ' }}
-                                </span>
-                                <span class="text-xs text-gray-400 font-medium self-center italic">
-                                    — with Team Alpha
+                                @svg('heroicon-o-' . $dayEvent->event_type->icon, 'w-6 h-6', ['style' => 'color: ' . $dayEvent->event_type?->color ?? '#838282'])
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider" style="
+                                    background-color: {{ $dayEvent->event_type->color ?? '#828282' }};
+                                    color: {{ $dayEvent->event_type->text_color ?? '#000' }};
+                                ">
+                                    {{ $dayEvent->event_type?->key ?? 'N/A' }}
                                 </span>
                             </div>
                         </div>
@@ -57,17 +61,9 @@
 
                     @if($dayEvent->description)
                         <p class="mt-4 text-gray-500 leading-relaxed max-w-prose antialiased">
-                            {{ $dayEvent->description }}
+                            <em>{{ $dayEvent->description }}</em>
                         </p>
                     @endif
-
-                    <div class="mt-6 flex items-center gap-4">
-                        <div class="flex -space-x-2">
-                            <img class="w-7 h-7 rounded-full border-2 border-white" src="https://ui-avatars.com/api/?name=JD" alt="">
-                            <img class="w-7 h-7 rounded-full border-2 border-white" src="https://ui-avatars.com/api/?name=AB" alt="">
-                        </div>
-                        <span class="text-xs font-semibold text-gray-400">2 participants</span>
-                    </div>
                 </div>
             </div>
         @endforeach

@@ -14,6 +14,16 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            safelist: {
+                'meeting': '#1E90FF',
+                'birthday': '#FF69B4',
+                'holiday': '#32CD32',
+                'anniversary': '#FFD700',
+                'reminder': '#FF4500',
+                'appointment': '#8A2BE2',
+                'task': '#20B2AA',
+                'other': '#494949',
+            },
         },
     },
 

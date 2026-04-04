@@ -34,6 +34,20 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+                <!-- Calendar View -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')" wire:navigate>
+                        {{ __('Calendar') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Create Event View -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('calendar.event.create')" :active="request()->routeIs('calendar.event.create')" wire:navigate>
+                        {{ __('New Event') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -56,15 +70,23 @@ new class extends Component
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
-                                {{ __('Log Out') }}
+                        <button id="newEvent" class="w-full text-start">
+                            <x-dropdown-link :href="route('calendar.event.create')">
+                                {{ __('New Event') }}
                             </x-dropdown-link>
                         </button>
+
+                        <!-- Go Fullscreen -->
                         <button id="fullscreenBtn" class="w-full text-start">
                             <x-dropdown-link>
                                 {{ __('Fullscreen') }}
+                            </x-dropdown-link>
+                        </button>
+
+                        <!-- Logout -->
+                        <button wire:click="logout" class="w-full text-start">
+                            <x-dropdown-link>
+                                {{ __('Log Out') }}
                             </x-dropdown-link>
                         </button>
                     </x-slot>
@@ -103,16 +125,22 @@ new class extends Component
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
-                <!-- Authentication -->
-                <button wire:click="logout" class="w-full text-start">
-                    <x-responsive-nav-link>
-                        {{ __('Log Out') }}
+                <button id="newEvent" class="w-full text-start">
+                    <x-responsive-nav-link :href="route('calendar.event.create')">
+                        {{ __('New Event') }}
                     </x-responsive-nav-link>
                 </button>
                 
                 <button id="fullscreenBtn" class="w-full text-start">
                     <x-responsive-nav-link>
                         {{ __('Fullscreen') }}
+                    </x-responsive-nav-link>
+                </button>
+
+                <!-- Authentication -->
+                <button wire:click="logout" class="w-full text-start">
+                    <x-responsive-nav-link>
+                        {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </button>
             </div>

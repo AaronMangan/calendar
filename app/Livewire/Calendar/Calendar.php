@@ -83,8 +83,6 @@ class Calendar extends Component
         }
 
         $collected = collect($days);
-        // $lastDay = $collected->pop();
-
         return $collected;
     }
 
