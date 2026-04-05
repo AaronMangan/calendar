@@ -1,4 +1,4 @@
-<div class="max-w-6xl mt-12 mx-auto p-6 bg-white rounded-lg shadow-md" id="content">
+<div class="max-w-[75%] mt-12 mx-auto p-6 bg-white rounded-lg shadow-md" id="content">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
         <x-primary-button wire:click="previousMonth" class="text-center">
@@ -24,14 +24,13 @@
     <!-- Calendar grid -->
     <div title="{{ $this->currentMonth->format('F Y') }}" class="grid grid-cols-1 md:grid-cols-7 grid-rows-5 border-l border-t">
         @foreach ($this->days as $day)
-            <div class="h-32 border-r border-b p-2 
+            <div class="h-40 border-r border-b p-2 
                 {{ $day->month !== $currentMonth->month ? 'bg-gray-300 hidden md:block text-gray-500' : '' }}
                 {{ $day->toLocal()->isToday() ? 'bg-blue-200 text-black' : '' }}
             ">
                 <div class="text-base font-thin" wire.click="examineDay({{ $day?->day }})">
                     {{ $day?->day }}
                 </div>
-                <!-- Events placeholder -->
                 <div class="mt-1 text-sm space-y-1">
                     @php
                         $events = collect($this->eventsForDay($day));
