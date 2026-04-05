@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Frequency;
+use App\Models\CalendarEvent;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -45,6 +46,12 @@ return new class extends Migration
         Schema::table('calendar_events', function (Blueprint $table) {
             $table->foreignId('frequency_id')->nullable()->constrained('frequencies')->onDelete('set null');
         });
+
+        $event = CalendarEvent::where('title', 'Training')->first();
+        if ($event) {
+            $event->frequency_id = 2;
+            $event->save();
+        }
     }
 
     /**

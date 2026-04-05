@@ -48,7 +48,7 @@ return new class extends Migration
 
         $events = [
             [
-                'title' =>'Morning Meeting',
+                'title' => 'Morning Meeting',
                 'description' => 'The morning catch up with the team',
                 'from' => now()->subHour(),
                 'to' => now(),
@@ -61,7 +61,7 @@ return new class extends Migration
                 'event_type_id' => 1,
             ],
             [
-                'title' =>'Jasper Vet Appointment',
+                'title' => 'Jasper Vet Appointment',
                 'description' => 'An appointment at the vet for Jasper',
                 'from' => now()->addDay(),
                 'to' => now()->addDay()->addHour(),
@@ -74,7 +74,7 @@ return new class extends Migration
                 'event_type_id' => 6,
             ],
             [
-                'title' =>'Training',
+                'title' => 'Training',
                 'description' => 'Training for the thing',
                 'from' => now()->addDays(2)->startOfDay(),
                 'to' => now()->addDays(2)->endOfDay(),

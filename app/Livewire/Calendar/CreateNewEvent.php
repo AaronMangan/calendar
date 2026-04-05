@@ -20,7 +20,7 @@ class CreateNewEvent extends Component
     public ?string $end_time = null;
     public ?string $description = null;
     public ?string $type = null;
-    public ?string $frequency_id = null;
+    public ?int $frequency_id = null;
     public ?string $event_type_id = null;
     public ?bool $all_day = false;
     public ?bool $is_public = false;
@@ -73,7 +73,6 @@ class CreateNewEvent extends Component
     public function createEvent(Request $request): void
     {
         $data = $this->validate($this->validationRules());
-        
         $event = CalendarEvent::create([
             'title' => $this->title ?? null,
             'description' => $this?->description ?? null,
@@ -82,7 +81,7 @@ class CreateNewEvent extends Component
             'is_recurring' => $this->is_recurring ?? false,
             'frequency_id' => $this->frequency_id ?? null,
             'user_id' => auth()->user()->id ?? null,
-            'family_id' =>auth()->user()->family_id ?? null,
+            'family_id' => auth()->user()->family_id ?? null,
             'event_type_id' => EventType::where([
                 ['name', '=', $this->event_type_id],
                 ['family_id', '=', auth()->user()->family_id],
@@ -152,7 +151,7 @@ class CreateNewEvent extends Component
                 'nullable', 'boolean'
             ],
             'frequency_id' => [
-                'nullable',
+                'nullable', 'required_if:is_recurring,true', 'numeric', 'exists:frequencies,id'
             ],
             'event_type_id' => [
                 'required', 'exists:event_types,id'

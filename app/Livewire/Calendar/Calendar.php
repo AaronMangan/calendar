@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Calendar extends Component
@@ -40,6 +40,7 @@ class Calendar extends Component
     {
         $this->currentMonth = now()->setTimezone(auth()->user()?->family?->timezone)->startOfMonth();
         $this->events = $this->getEventsForMonth(now()->toLocal()->format('Y'), now()->format('m'));
+        // dd($this->events);
     }
 
     /**
@@ -138,6 +139,52 @@ class Calendar extends Component
      */
     public function getEventsForMonth(string $year, string $month): ?Collection
     {
-        return CalendarEvent::forMonth($year, $month)->get();
+        return $this->hydrateEvents(CalendarEvent::forMonth($year, $month)->get());
+    }
+
+    public function hydrateEvents($events)
+    {
+        $expandedEvents = collect();
+        $endOfMonth = $this->currentMonth->copy()->toLocal()->endOfMonth();
+        $startOfMonth = $this->currentMonth->copy()->toLocal()->startOfMonth();
+
+        foreach ($events as $event) {
+            if (!$event->is_recurring) {
+                $expandedEvents->push($event);
+                continue;
+            }
+            $event->load('frequency');
+            $current = Carbon::parse($event->from);
+            $end = now()->addMonths(3);
+
+            while ($current <= $end && $current <= $endOfMonth) {
+                if ($current >= $startOfMonth) {
+                    $clone = $event->replicate(); // not saved
+                    $clone->id = $event->id;
+                    // $clone->from = $current->copy()->toDateTimeString();
+                    $clone->from = $this->updateDate($current->copy(), strtolower($event->frequency->name))->toDateTimeString();
+                    $clone->to = $this->updateDate($current->copy()->addSeconds(Carbon::parse($event->from)->diffInSeconds($event->to)), strtolower($event->frequency->name))->toDateTimeString();
+
+                    $expandedEvents->push($clone);
+                }
+
+                // Move forward based on recurrence type
+                match (strtolower($event->frequency->name)) {
+                    'daily' => $current->addDay(),
+                    'weekly' => $current->addDays(7),
+                    'monthly' => $current->addMonth(),
+                    default => null
+                };
+            }
+        }
+        return $expandedEvents;
+    }
+
+    private function updateDate($date, $frequency) {
+        return match ($frequency) {
+            'daily' => $date->addDay(),
+            'weekly' => $date->addDays(7),
+            'monthly' => $date->addMonth(),
+        };
     }
 }
