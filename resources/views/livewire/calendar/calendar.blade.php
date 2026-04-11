@@ -22,7 +22,7 @@
     </div>
 
     <!-- Calendar grid -->
-    <div title="{{ $this->currentMonth->format('F Y') }}" class="grid grid-cols-1 md:grid-cols-7 grid-rows-5 border-l border-t">
+    <div title="{{ $this->currentMonth->format('F Y') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 grid-rows-5 border-l border-t">
         @foreach ($this->days as $day)
             <div class="h-40 border-r border-b p-2 
                 {{ $day->month !== $currentMonth->month ? 'bg-gray-300 hidden md:block text-gray-500' : '' }}
@@ -35,7 +35,7 @@
                     @php
                         $events = collect($this->eventsForDay($day));
                         $visibleEvents = $events->take(3);
-                        $remainingCount = $events->count() - 3;
+                        $remainingCount = $events?->count() - 3 ?? 0;
                     @endphp
 
                     @foreach ($visibleEvents as $event)
