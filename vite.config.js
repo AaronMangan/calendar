@@ -12,6 +12,10 @@ export default defineConfig({
         watch: {
             usePolling: true,
         },
-        host: true,
+        server: {
+            host: true,
+            port: 5173,
+        },
+        host: true
     }
 });
